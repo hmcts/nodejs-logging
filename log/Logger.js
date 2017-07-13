@@ -86,12 +86,14 @@ class Logger {
     logEntry.team = userConfig.team || 'not-configured';
     logEntry.environment = userConfig.environment || 'not-configured';
 
-    if (logging.output === outputTypes.single) {
-      this.logger[level](JSON.stringify(logEntry));
-    } else if (logging.output === outputTypes.multi) {
-      this.logger[level](logEntry);
-    } else {
-      this.logger[level](`${logEntry.timestamp} ${logEntry.level} ${this.logger.category}: ${logEntry.message}`)
+    if (process.env.NODE_ENV != 'test') {
+      if (logging.output === outputTypes.single) {
+        this.logger[level](JSON.stringify(logEntry));
+      } else if (logging.output === outputTypes.multi) {
+        this.logger[level](logEntry);
+      } else {
+        this.logger[level](`${logEntry.timestamp} ${logEntry.level} ${this.logger.category}: ${logEntry.message}`)
+      }
     }
 
     return logEntry;

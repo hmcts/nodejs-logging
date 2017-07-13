@@ -46,7 +46,7 @@ const logging = {
   //      log4js - log levels
   //  ---------------------------------------
   //  ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
-  currentLevel: process.env.LOG_LEVEL || log4js.levels.INFO,
+  currentLevel: process.env.NODE_ENV || log4js.levels.INFO,
 
   // "single": view JSON logs on a single line - this setting should be used for production.
   // "multi": view JSON logs over multiple lines - helpful during development.
