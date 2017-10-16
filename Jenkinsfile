@@ -1,12 +1,18 @@
 #!groovy
 
+//noinspection GroovyAssignabilityCheck
 properties(
-    [[$class: 'GithubProjectProperty', projectUrlStr: 'http://git.reform.hmcts.net/reform/nodejs-logging'],
+    [[$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/nodejs-logging'],
      pipelineTriggers([
          [$class: 'GitHubPushTrigger'],
          [$class: 'hudson.triggers.TimerTrigger', spec  : 'H 1 * * *']
      ])]
 )
+
+//noinspection GroovyUnusedAssignment jenkins requires _ if you don't import a class
+@Library('Reform') _
+
+String channel = '#jenkins-notifications'
 
 node {
     try {
@@ -22,11 +28,9 @@ node {
         stage('Test') {
             sh 'npm test'
         }
-    } catch (err) {
-        slackSend(
-            channel: '#development',
-            color: 'danger',
-            message: "${env.JOB_NAME}:  <${env.BUILD_URL}console|Build ${env.BUILD_DISPLAY_NAME}> has FAILED")
+    } catch (Throwable err) {
+        notifyBuildFailure channel: channel
         throw err
     }
+    notifyBuildFixed channel: channel
 }
