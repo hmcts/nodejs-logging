@@ -1,5 +1,7 @@
 language: node_js
 cache: yarn
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.2.1
 script:
   - yarn --version
   - yarn check --integrity
