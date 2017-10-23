@@ -2,7 +2,7 @@
 /* global describe, it, beforeEach */
 
 const expect = require('chai').expect;
-const cloneDeep = require('lodash.cloneDeep');
+const cloneDeep = require('lodash.clonedeep');
 
 const defaultLogEntry = require('../../log/config').logging.defaultLogEntry;
 const Logger = require('../../log/Logger');
