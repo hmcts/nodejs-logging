@@ -2,7 +2,7 @@
 /* global beforeEach, describe, it */
 
 const {expect, sinon} = require('../chai-sinon');
-const logging = require('../../log/config').logging;
+const {alertLevels, logging} = require('../../log/config');
 const defaultLogEntry = logging.defaultLogEntry;
 const LEVELS = require('log4js').levels;
 
@@ -288,6 +288,58 @@ describe('Logging within the Node.js application', () => {
       expect(loggerInstance3).to.not.equal(loggerInstance1);
     });
 
+  });
+
+  describe('Logging with alert level', () => {
+
+    beforeEach(() => {
+      sinon.stub(logger, '_log');
+      logger._log.callThrough();
+    });
+
+    it('should log one error entry with alert level present', () => {
+      logger.error({
+        message: 'Some error',
+        alertLevel: alertLevels.P2
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Some error',
+        alertLevel: alertLevels.P2
+      });
+      expect(logger._log).to.not.have.been.calledWithMatch({
+        message: 'Bad log level usage: alertLevel is required',
+        alertLevel: alertLevels.P1,
+        level: LEVELS.ERROR.toString()
+      });
+    });
+
+    it('should log two error entries when alert level is not present', () => {
+      logger.error({
+        message: 'Some error'
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Some error'
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Bad log level usage: alertLevel is required',
+        alertLevel: alertLevels.P1,
+        level: LEVELS.ERROR.toString()
+      });
+    });
+
+    it('should log error entry when alert level is not present in fatal log', () => {
+      logger.fatal({
+        message: 'Some fail'
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Some fail'
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Bad log level usage: alertLevel is required',
+        alertLevel: alertLevels.P1,
+        level: LEVELS.ERROR.toString()
+      });
+    });
   });
 
 });

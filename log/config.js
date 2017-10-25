@@ -7,6 +7,13 @@ const outputTypes = {
   human: 'human'
 };
 
+const alertLevels = {
+  P1: 'P1',
+  P2: 'P2',
+  P3: 'P3',
+  P4: 'P4'
+};
+
 const nodejs = 'nodejs';
 
 log4js.configure({
@@ -25,6 +32,7 @@ log4js.configure({
 const logging = {
 
   defaultLogEntry: {
+    alertLevel: '',
     level: log4js.levels.INFO,
     message: '',
     rootRequestId: '',
@@ -59,5 +67,6 @@ const logging = {
 
 module.exports =  {
   logging: logging,
-  outputTypes: outputTypes
+  outputTypes: outputTypes,
+  alertLevels: alertLevels
 };

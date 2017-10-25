@@ -1,6 +1,6 @@
 const merge = require('lodash.merge');
 const moment = require('moment');
-const {logging, outputTypes} = require('./config');
+const {logging, outputTypes, alertLevels} = require('./config');
 const levels = logging.log4js.levels;
 
 let userConfig = {};
@@ -77,6 +77,16 @@ class Logger {
     logEntry.microservice = userConfig.microservice || 'not-configured';
     logEntry.team = userConfig.team || 'not-configured';
     logEntry.environment = userConfig.environment || 'not-configured';
+
+    if (levels.getLevel(level).isGreaterThanOrEqualTo(levels.ERROR)) {
+      if (logEntry.alertLevel === '') {
+        this._log({
+          message: 'Bad log level usage: alertLevel is required',
+          alertLevel: alertLevels.P1,
+          level: levels.ERROR.toString()
+        });
+      }
+    }
 
     if (logging.output === outputTypes.single) {
       this.logger[level](JSON.stringify(logEntry));
