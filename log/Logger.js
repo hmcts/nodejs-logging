@@ -93,7 +93,8 @@ class Logger {
     } else if (logging.output === outputTypes.multi) {
       this.logger[level](logEntry);
     } else {
-      this.logger[level](`${logEntry.timestamp} ${logEntry.level} ${this.logger.category}: ${logEntry.message}`)
+      const alertLevel = logEntry.alertLevel ? `[${logEntry.alertLevel}] ` : ''
+      this.logger[level](`${logEntry.timestamp} ${logEntry.level} ${this.logger.category}: ${alertLevel}${logEntry.message}`);
     }
 
     return logEntry;
