@@ -19,7 +19,7 @@ log4js.configure({
       }
     }
   },
-  categories: { default: { appenders: ['console'], level: 'info' } }
+  categories: { default: { appenders: ['console'], level: process.env.LOG_LEVEL || log4js.levels.INFO } }
 })
 
 const logging = {
