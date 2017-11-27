@@ -79,10 +79,11 @@ class Logger {
     logEntry.environment = userConfig.environment || 'not-configured';
 
     if (levels.getLevel(level).isGreaterThanOrEqualTo(levels.ERROR)) {
-      if (logEntry.alertLevel === '') {
+      if (logEntry.alertLevel === '' || logEntry.errorCode === '') {
         this._log({
-          message: 'Bad log level usage: alertLevel is required',
+          message: 'Bad log level usage: alertLevel and errorCode is required',
           alertLevel: alertLevels.P1,
+          errorCode: '0',
           level: levels.ERROR.toString()
         });
       }
@@ -93,8 +94,9 @@ class Logger {
     } else if (logging.output === outputTypes.multi) {
       this.logger[level](logEntry);
     } else {
-      const alertLevel = logEntry.alertLevel ? `[${logEntry.alertLevel}] ` : ''
-      this.logger[level](`${logEntry.timestamp} ${logEntry.level} ${this.logger.category}: ${alertLevel}${logEntry.message}`);
+      const alertLevel = logEntry.alertLevel ? `[${logEntry.alertLevel}] ` : '';
+      const errorCode = logEntry.errorCode ? logEntry.errorCode + '. ' : '';
+      this.logger[level](`${logEntry.timestamp} ${logEntry.level} ${this.logger.category}: ${alertLevel}${errorCode}${logEntry.message}`);
     }
 
     return logEntry;

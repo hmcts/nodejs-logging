@@ -290,24 +290,26 @@ describe('Logging within the Node.js application', () => {
 
   });
 
-  describe('Logging with alert level', () => {
+  describe('Logging with alert level and error code', () => {
 
     beforeEach(() => {
       sinon.stub(logger, '_log');
       logger._log.callThrough();
     });
 
-    it('should log one error entry with alert level present', () => {
+    it('should log one error entry with alert level and error code present', () => {
       logger.error({
         message: 'Some error',
-        alertLevel: alertLevels.P2
+        alertLevel: alertLevels.P2,
+        errorCode: '0'
       });
       expect(logger._log).to.have.been.calledWithMatch({
         message: 'Some error',
-        alertLevel: alertLevels.P2
+        alertLevel: alertLevels.P2,
+        errorCode: '0'
       });
       expect(logger._log).to.not.have.been.calledWithMatch({
-        message: 'Bad log level usage: alertLevel is required',
+        message: 'Bad log level usage: alertLevel and errorCode is required',
         alertLevel: alertLevels.P1,
         level: LEVELS.ERROR.toString()
       });
@@ -315,19 +317,37 @@ describe('Logging within the Node.js application', () => {
 
     it('should log two error entries when alert level is not present', () => {
       logger.error({
-        message: 'Some error'
+        message: 'Some error',
+        errorCode: '0'
       });
       expect(logger._log).to.have.been.calledWithMatch({
-        message: 'Some error'
+        message: 'Some error',
+        errorCode: '0'
       });
       expect(logger._log).to.have.been.calledWithMatch({
-        message: 'Bad log level usage: alertLevel is required',
+        message: 'Bad log level usage: alertLevel and errorCode is required',
         alertLevel: alertLevels.P1,
         level: LEVELS.ERROR.toString()
       });
     });
 
-    it('should log error entry when alert level is not present in fatal log', () => {
+    it('should log two error entries when error code is not present', () => {
+      logger.error({
+        message: 'Some error',
+        alertLevel: alertLevels.P2
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Some error',
+        alertLevel: alertLevels.P2
+      });
+      expect(logger._log).to.have.been.calledWithMatch({
+        message: 'Bad log level usage: alertLevel and errorCode is required',
+        alertLevel: alertLevels.P1,
+        level: LEVELS.ERROR.toString()
+      });
+    });
+
+    it('should log error entry when alert level nor error code is present in fatal log', () => {
       logger.fatal({
         message: 'Some fail'
       });
@@ -335,7 +355,7 @@ describe('Logging within the Node.js application', () => {
         message: 'Some fail'
       });
       expect(logger._log).to.have.been.calledWithMatch({
-        message: 'Bad log level usage: alertLevel is required',
+        message: 'Bad log level usage: alertLevel and errorCode is required',
         alertLevel: alertLevels.P1,
         level: LEVELS.ERROR.toString()
       });

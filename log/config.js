@@ -33,6 +33,7 @@ const logging = {
 
   defaultLogEntry: {
     alertLevel: '',
+    errorCode: '',
     level: log4js.levels.INFO,
     message: '',
     rootRequestId: '',
