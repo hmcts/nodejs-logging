@@ -143,10 +143,10 @@ describe('Express.js application logging', () => {
   });
 });
 
-function createServer (logger, config={}) {
+function createServer (middleware, config={}) {
   return http.createServer(function onRequest (req, res) {
 
-    logger(req, res, function onNext (err) {
+    middleware(req, res, function onNext (err) {
       // allow req, res alterations
       if (err) {
         res.statusCode = 500
