@@ -1,10 +1,11 @@
 'use strict'
 
 const onFinished = require('on-finished');
+const Logger = require('./Logger')
 
 class AccessLogger {
   constructor(config = { }) {
-    this.logger = config.logger || require('./Logger').getLogger('express.access');
+    this.logger = config.logger || Logger.getLogger('express.access');
     this.formatter = config.formatter || AccessLogger.defaultFormatter;
     this.userLevel = config.level || AccessLogger.defaultLevel;
   }
