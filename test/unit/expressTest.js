@@ -2,11 +2,11 @@
 
 const { expect, sinon } = require('../chai-sinon');
 const express = require('../../log/express');
+const { REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER } = require('../../log/requestTracing')
 const http = require('http');
 const request = require('supertest');
 
 describe('Express.js application logging', () => {
-
   let myLogger, logger;
 
   const CONFIG = {
@@ -36,7 +36,6 @@ describe('Express.js application logging', () => {
     });
 
     describe('logging', () => {
-
       it('should log a successful request on /', (done) => {
         request(createServer(middleware))
           .get('/')
@@ -123,14 +122,44 @@ describe('Express.js application logging', () => {
       });
     });
 
+    describe('request tracing headers', () => {
+      let req
+
+      beforeEach(() => {
+        const headers = { }
+        headers[REQUEST_ID_HEADER] = 'test-request-id'
+        headers[ORIGIN_REQUEST_ID_HEADER] = 'test-origin-request-id'
+        headers[ROOT_REQUEST_ID_HEADER] = 'test-root-request-id'
+        req = {
+          headers: headers
+        }
+      })
+
+      it('should log request tracing headers', (done) => {
+        request(createServer(middleware, { req: req }))
+          .get('/')
+          .expect(200, () => {
+            expect(logger.info).to.have.been.calledWith(sinon.match({
+              responseCode: 200,
+              message: '"GET / HTTP/1.1" 200',
+              requestId: 'test-request-id',
+              originRequestId: 'test-origin-request-id',
+              rootRequestId: 'test-root-request-id'
+            }));
+            done()
+          });
+      })
+    })
   });
 });
 
-function createServer (middleware, config={}) {
+function createServer (middleware, config = { }) {
   return http.createServer(function onRequest (req, res) {
-
     middleware(req, res, function onNext (err) {
       // allow req, res alterations
+      if (config.req && config.req.headers) {
+        req.headers = { ...req.headers, ...config.req.headers }
+      }
       if (err) {
         res.statusCode = 500
         res.end(err.message)

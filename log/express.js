@@ -2,6 +2,7 @@
 
 const onFinished = require('on-finished');
 const Logger = require('./Logger')
+const { REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER } = require('./requestTracing')
 
 class AccessLogger {
   constructor(config = { }) {
@@ -26,7 +27,10 @@ class AccessLogger {
     const level = this.level(req, res);
     level.call(this.logger, {
       responseCode: res.statusCode,
-      message: this.formatter(req, res)
+      message: this.formatter(req, res),
+      requestId: req.headers[REQUEST_ID_HEADER],
+      originRequestId: req.headers[ORIGIN_REQUEST_ID_HEADER],
+      rootRequestId: req.headers[ROOT_REQUEST_ID_HEADER]
     });
   }
 
