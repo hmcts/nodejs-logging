@@ -3,13 +3,13 @@
 const onFinished = require('on-finished');
 
 class AccessLogger {
-  constructor(config={}) {
+  constructor(config = { }) {
     this.logger = config.logger || require('./Logger').getLogger('express.access');
     this.formatter = config.formatter || this.defaultFormatter;
-    this.userLevel = config.level || function() {};
+    this.userLevel = config.level || function() { };
   }
 
-  static middleware(config={}) {
+  static middleware(config = { }) {
     const accessLogger = new AccessLogger(config);
 
     return (req, res, next) => {
@@ -53,5 +53,6 @@ class AccessLogger {
 
 
 module.exports = {
+  AccessLoggingHandler: AccessLogger,
   accessLogger: AccessLogger.middleware,
 };

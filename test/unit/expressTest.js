@@ -1,6 +1,6 @@
 'use strict'
 
-const {expect, sinon} = require('../chai-sinon');
+const { expect, sinon } = require('../chai-sinon');
 const express = require('../../log/express');
 const http = require('http');
 const request = require('supertest');
@@ -18,23 +18,6 @@ describe('Express.js application logging', () => {
   beforeEach(() => {
     myLogger = require('../../log/Logger');
     myLogger.config(CONFIG);
-  });
-
-  describe('integration', () => {
-
-    it('should log a successful request on / with the default logger', () => {
-      let middleware = express.accessLogger();
-      let info = sinon.spy(myLogger.getLogger('express.access'), 'info');
-      request(createServer(middleware))
-        .get('/')
-        .expect(200, () => {
-          expect(info).to.have.been.calledWith(sinon.match({
-            responseCode: 200,
-            message: '"GET / HTTP/1.1" 200',
-          }));
-        });
-    });
-
   });
 
   describe('unit', () => {
