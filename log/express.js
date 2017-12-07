@@ -6,7 +6,7 @@ class AccessLogger {
   constructor(config = { }) {
     this.logger = config.logger || require('./Logger').getLogger('express.access');
     this.formatter = config.formatter || this.defaultFormatter;
-    this.userLevel = config.level || function() { };
+    this.userLevel = config.level || this.defaultLevel;
   }
 
   static middleware(config = { }) {
@@ -30,16 +30,16 @@ class AccessLogger {
   }
 
   level(req, res) {
-    return this.userLevel(this.logger, req, res) || this.defaultLevel(req, res);
+    return this.userLevel(this.logger, req, res);
   }
 
-  defaultLevel(req, res) {
+  defaultLevel(logger, req, res) {
     if (res.statusCode < 400 || res.statusCode == 404) {
-      return this.logger.info;
+      return logger.info;
     } else if (res.statusCode >= 500) {
-      return this.logger.error;
+      return logger.error;
     } else {
-      return this.logger.warn;
+      return logger.warn;
     }
   }
 
