@@ -56,12 +56,12 @@ describe('RequestTracing', () => {
         requestTracingMiddleware(req, req, next)
         expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.be.undefined
       })
-    }
 
-    it('should call the next function', () => {
-      requestTracingMiddleware(req, res, next)
-      expect(next).calledOnce
-    })
+      it('should call the next function', () => {
+        requestTracingMiddleware(req, res, next)
+        expect(next).calledOnce
+      })
+    }
 
     context(`when ${REQUEST_ID_HEADER} is not initially present`, () => {
       itShouldSetNewRequestIdValues()
@@ -109,6 +109,11 @@ describe('RequestTracing', () => {
         expect(req.headers[REQUEST_ID_HEADER]).to.equal(requestId)
         expect(req.headers[ROOT_REQUEST_ID_HEADER]).to.equal(rootRequestId)
         expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.equal(originRequestId)
+      })
+
+      it('should call the next function', () => {
+        requestTracingMiddleware(req, res, next)
+        expect(next).calledOnce
       })
     })
   })
