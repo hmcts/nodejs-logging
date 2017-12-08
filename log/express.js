@@ -2,7 +2,7 @@
 
 const onFinished = require('on-finished');
 const Logger = require('./Logger')
-const { REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER } = require('./requestTracing')
+const { REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER } = require('./tracing/headers')
 
 class AccessLogger {
   constructor(config = { }) {

@@ -2,7 +2,7 @@
 
 const { expect, sinon } = require('../chai-sinon');
 const express = require('../../log/express');
-const { REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER } = require('../../log/requestTracing')
+const { REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER } = require('../../log/tracing/headers')
 const http = require('http');
 const request = require('supertest');
 
