@@ -26,23 +26,35 @@ describe('RequestTracing', () => {
       expect(next).calledOnce
     })
 
-    context('when headers are not initially present', () => {
-      it('should set Request-Id header with UUID', () => {
+    context(`when ${REQUEST_ID_HEADER} is not initially present`, () => {
+      it(`should set ${REQUEST_ID_HEADER} header with UUID`, () => {
         requestTracingMiddleware(req, req, next)
         expect(req.headers[REQUEST_ID_HEADER]).to.match(UUID_REGEX)
       })
 
-      it('should set Root-Request-Id header with UUID', () => {
+      it(`should set ${ROOT_REQUEST_ID_HEADER} header with UUID`, () => {
         requestTracingMiddleware(req, req, next)
         expect(req.headers[ROOT_REQUEST_ID_HEADER]).to.match(UUID_REGEX)
       })
 
-      it('should set Request-Id and Root-Request-Id headers with the same value', () => {
+      it(`should set ${REQUEST_ID_HEADER} and ${ROOT_REQUEST_ID_HEADER} headers with the same value`, () => {
         requestTracingMiddleware(req, req, next)
         expect(req.headers[REQUEST_ID_HEADER]).to.equal(req.headers[ROOT_REQUEST_ID_HEADER])
       })
 
-      it('should not set Origin-Request-Id header', () => {
+      it(`should not set ${ORIGIN_REQUEST_ID_HEADER} header`, () => {
+        requestTracingMiddleware(req, req, next)
+        expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.be.undefined
+      })
+
+      it(`should overwrite existing ${ROOT_REQUEST_ID_HEADER} value if it's present`, () => {
+        req.headers[ROOT_REQUEST_ID_HEADER] = 'gibberish'
+        requestTracingMiddleware(req, req, next)
+        expect(req.headers[ROOT_REQUEST_ID_HEADER]).not.to.equal('gibberish')
+      })
+
+      it(`should blank existing ${ORIGIN_REQUEST_ID_HEADER} if it's present`, () => {
+        req.headers[ORIGIN_REQUEST_ID_HEADER] = 'gibberish'
         requestTracingMiddleware(req, req, next)
         expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.be.undefined
       })
