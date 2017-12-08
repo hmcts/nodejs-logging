@@ -6,7 +6,7 @@ Logger.express = require('./log/express');
 
 Logger.requestTracing = {
   headers: require('./log/tracing/headers'),
-  middleware: require('./log/tracing/middleware')
+  RequestTracing: require('./log/tracing/requestTracing')
 }
 
 module.exports = Logger;
