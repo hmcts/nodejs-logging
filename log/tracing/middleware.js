@@ -9,6 +9,4 @@ function requestTracingMiddleware (req, res, next) {
   next()
 }
 
-module.exports = {
-  requestTracingMiddleware
-}
+module.exports = requestTracingMiddleware
