@@ -3,20 +3,20 @@ const { createNamespace, getNamespace } = require('continuation-local-storage')
 
 const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = require('./headers')
 
-const setInitialRequestTracingHeaders = (req) => {
+function setInitialRequestTracingHeaders (req) {
   const id = uuid()
   req.headers[REQUEST_ID_HEADER] = id
   req.headers[ROOT_REQUEST_ID_HEADER] = id
   req.headers[ORIGIN_REQUEST_ID_HEADER] = undefined
 }
 
-const tracingHeadersNotPresentOrInvalid = (req) => {
+function tracingHeadersNotPresentOrInvalid (req) {
   return notUUID(req.headers[REQUEST_ID_HEADER])
     || notUUID(req.headers[ROOT_REQUEST_ID_HEADER])
     || notUUID(req.headers[ORIGIN_REQUEST_ID_HEADER])
 }
 
-const notUUID = (uuidString) => {
+function notUUID (uuidString) {
   const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
   return !UUID_REGEX.test(uuidString)
 }
