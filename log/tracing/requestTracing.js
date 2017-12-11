@@ -3,7 +3,7 @@ const { createNamespace, getNamespace } = require('continuation-local-storage')
 
 const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = require('./headers')
 
-const setNewRequestTracingHeaders = (req) => {
+const setInitialRequestTracingHeaders = (req) => {
   const id = uuid()
   req.headers[REQUEST_ID_HEADER] = id
   req.headers[ROOT_REQUEST_ID_HEADER] = id
@@ -27,7 +27,7 @@ const STORAGE_INITIAL_REQUEST = 'initialRequest'
 class RequestTracing {
   static middleware (req, res, next) {
     if (tracingHeadersNotPresentOrInvalid(req)) {
-      setNewRequestTracingHeaders(req)
+      setInitialRequestTracingHeaders(req)
     }
     const localStorage = createNamespace(STORAGE_NAMESPACE)
     localStorage.run(() => {
