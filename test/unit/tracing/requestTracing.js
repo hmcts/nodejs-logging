@@ -2,6 +2,7 @@
 /* global describe, context, it, beforeEach */
 
 const uuid = require('uuid')
+const { getNamespace } = require('continuation-local-storage')
 
 const { expect, sinon } = require('../../chai-sinon')
 
@@ -24,7 +25,7 @@ describe('RequestTracing', () => {
       next = sinon.stub()
     })
 
-    function itShouldSetNewRequestIdValues() {
+    function itShouldSetNewRequestIdValues () {
       it(`should set ${REQUEST_ID_HEADER} header with UUID`, () => {
         requestTracingMiddleware(req, req, next)
         expect(req.headers[REQUEST_ID_HEADER]).to.match(UUID_REGEX)
@@ -114,6 +115,20 @@ describe('RequestTracing', () => {
       it('should call the next function', () => {
         requestTracingMiddleware(req, res, next)
         expect(next).calledOnce
+      })
+    })
+
+    context('continuation local storage', () => {
+      function createContinuationFunction (done) {
+        return function () {
+          const localStorage = getNamespace('requestHandlerLocalStorage')
+          expect(localStorage.get('initialRequest')).to.equal(req)
+          done()
+        }
+      }
+
+      it('should make the request available', (done) => {
+        requestTracingMiddleware(req, req, createContinuationFunction(done))
       })
     })
   })

@@ -1,4 +1,5 @@
 const uuid = require('uuid')
+const { createNamespace } = require('continuation-local-storage')
 
 const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = require('./headers')
 
@@ -21,13 +22,16 @@ const notUUID = (uuidString) => {
   return !UUID_REGEX.test(uuidString)
 }
 
-
 class RequestTracing {
   static middleware (req, res, next) {
     if (tracingHeadersNotPresentOrInvalid(req)) {
       setNewRequestTracingHeaders(req)
     }
-    next()
+    const localStorage = createNamespace('requestHandlerLocalStorage')
+    localStorage.run(() => {
+      localStorage.set('initialRequest', req)
+      next()
+    })
   }
 }
 
