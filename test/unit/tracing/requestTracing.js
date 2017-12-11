@@ -12,54 +12,54 @@ const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 describe('RequestTracing', () => {
-  describe('middleware', () => {
-    const requestTracingMiddleware = RequestTracing.middleware
-    const GIBBERISH = 'gibberish'
-    let req, res, next
+  let req, res, next
 
-    beforeEach(() => {
-      req = {
-        headers: { }
-      }
-      res = { }
-      next = sinon.stub()
-    })
+  beforeEach(() => {
+    req = {
+      headers: { }
+    }
+    res = { }
+    next = sinon.stub()
+  })
+
+  describe('middleware', () => {
+    const GIBBERISH = 'gibberish'
 
     function itShouldSetNewRequestIdValues () {
       it(`should set ${REQUEST_ID_HEADER} header with UUID`, () => {
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[REQUEST_ID_HEADER]).to.match(UUID_REGEX)
       })
 
       it(`should set ${ROOT_REQUEST_ID_HEADER} header with UUID`, () => {
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[ROOT_REQUEST_ID_HEADER]).to.match(UUID_REGEX)
       })
 
       it(`should set ${REQUEST_ID_HEADER} and ${ROOT_REQUEST_ID_HEADER} headers with the same value`, () => {
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[REQUEST_ID_HEADER]).to.equal(req.headers[ROOT_REQUEST_ID_HEADER])
       })
 
       it(`should not set ${ORIGIN_REQUEST_ID_HEADER} header`, () => {
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.be.undefined
       })
 
       it(`should overwrite existing ${ROOT_REQUEST_ID_HEADER} value if it's present`, () => {
         req.headers[ROOT_REQUEST_ID_HEADER] = 'gibberish'
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[ROOT_REQUEST_ID_HEADER]).not.to.equal('gibberish')
       })
 
       it(`should blank existing ${ORIGIN_REQUEST_ID_HEADER} if it's present`, () => {
         req.headers[ORIGIN_REQUEST_ID_HEADER] = 'gibberish'
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.be.undefined
       })
 
       it('should call the next function', () => {
-        requestTracingMiddleware(req, res, next)
+        RequestTracing.middleware(req, res, next)
         expect(next).calledOnce
       })
     }
@@ -106,30 +106,30 @@ describe('RequestTracing', () => {
       })
 
       it('should keep those values', () => {
-        requestTracingMiddleware(req, req, next)
+        RequestTracing.middleware(req, req, next)
         expect(req.headers[REQUEST_ID_HEADER]).to.equal(requestId)
         expect(req.headers[ROOT_REQUEST_ID_HEADER]).to.equal(rootRequestId)
         expect(req.headers[ORIGIN_REQUEST_ID_HEADER]).to.equal(originRequestId)
       })
 
       it('should call the next function', () => {
-        requestTracingMiddleware(req, res, next)
+        RequestTracing.middleware(req, res, next)
         expect(next).calledOnce
       })
     })
+  })
 
-    context('continuation local storage', () => {
-      function createContinuationFunction (done) {
+  describe('getInitialRequest', () => {
+    it('should return the request object', (done) => {
+      function createNextFunction (done) {
         return function () {
-          const localStorage = getNamespace('requestHandlerLocalStorage')
-          expect(localStorage.get('initialRequest')).to.equal(req)
+          const initialRequest = RequestTracing.getInitialRequest()
+          expect(initialRequest).to.equal(req)
           done()
         }
       }
 
-      it('should make the request available', (done) => {
-        requestTracingMiddleware(req, req, createContinuationFunction(done))
-      })
+      RequestTracing.middleware(req, req, createNextFunction(done))
     })
   })
 })
