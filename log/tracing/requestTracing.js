@@ -40,6 +40,18 @@ class RequestTracing {
     const localStorage = getNamespace(STORAGE_NAMESPACE)
     return localStorage.get(STORAGE_INITIAL_REQUEST)
   }
+
+  static getRootRequestId () {
+    return RequestTracing.getInitialRequest().headers[ROOT_REQUEST_ID_HEADER]
+  }
+
+  static getCurrentRequestId () {
+    return RequestTracing.getInitialRequest().headers[REQUEST_ID_HEADER]
+  }
+
+  static createNextRequestId () {
+    return uuid()
+  }
 }
 
 module.exports = RequestTracing

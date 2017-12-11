@@ -132,4 +132,39 @@ describe('RequestTracing', () => {
       RequestTracing.middleware(req, req, createNextFunction(done))
     })
   })
+
+  describe('getRootRequestId', () => {
+    it(`should return the ${ROOT_REQUEST_ID_HEADER}`, (done) => {
+      function createNextFunction (done) {
+        return function () {
+          const rootRequestId = RequestTracing.getRootRequestId()
+          expect(rootRequestId).to.equal(req.headers[ROOT_REQUEST_ID_HEADER])
+          done()
+        }
+      }
+
+      RequestTracing.middleware(req, req, createNextFunction(done))
+    })
+  })
+
+  describe('getCurrentRequestId', () => {
+    it(`should return the ${REQUEST_ID_HEADER}`, (done) => {
+      function createNextFunction (done) {
+        return function () {
+          const rootRequestId = RequestTracing.getCurrentRequestId()
+          expect(rootRequestId).to.equal(req.headers[REQUEST_ID_HEADER])
+          done()
+        }
+      }
+
+      RequestTracing.middleware(req, req, createNextFunction(done))
+    })
+  })
+
+  describe('createNextRequestId', () => {
+    it('should return a UUID value', () => {
+      const nextRequestId = RequestTracing.createNextRequestId()
+      expect(nextRequestId).to.match(UUID_REGEX)
+    })
+  })
 })
