@@ -2,7 +2,6 @@
 /* global describe, context, it, beforeEach */
 
 const uuid = require('uuid')
-const { getNamespace } = require('continuation-local-storage')
 
 const { expect, sinon } = require('../../chai-sinon')
 
