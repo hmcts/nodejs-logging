@@ -24,13 +24,13 @@ function notUUID (uuidString) {
 const CLS_NAMESPACE = 'uk.gov.hmcts.cmc.citizenFrontend'
 const INITIAL_REQUEST = 'initialRequest'
 
-const continuationLocalStorageNamespace = createNamespace(CLS_NAMESPACE)
+const clsNamespace = createNamespace(CLS_NAMESPACE)
 
 function proceedWithinCLSContext (req, res, next) {
-  continuationLocalStorageNamespace.run(() => {
-    // continuationLocalStorageNamespace.bindEmitter(req)
-    // continuationLocalStorageNamespace.bindEmitter(res)
-    continuationLocalStorageNamespace.set(INITIAL_REQUEST, req)
+  clsNamespace.run(() => {
+    clsNamespace.bindEmitter(req)
+    clsNamespace.bindEmitter(res)
+    clsNamespace.set(INITIAL_REQUEST, req)
     next()
   })
 }
@@ -44,7 +44,7 @@ class RequestTracing {
   }
 
   static getInitialRequest () {
-    return continuationLocalStorageNamespace.get(INITIAL_REQUEST)
+    return clsNamespace.get(INITIAL_REQUEST)
   }
 
   static getRootRequestId () {

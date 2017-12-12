@@ -10,14 +10,20 @@ const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = 
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
+class MockedEventEmitter {
+  on () { }
+  addListener () { }
+  removeListener () { }
+  emit () { }
+}
+
 describe('RequestTracing', () => {
   let req, res, next
 
   beforeEach(() => {
-    req = {
-      headers: { }
-    }
-    res = { }
+    req = new MockedEventEmitter()
+    req.headers = { }
+    res = new MockedEventEmitter()
     next = sinon.stub()
   })
 
