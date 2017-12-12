@@ -10,6 +10,7 @@ const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = 
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
+// Needed by CLS Namespace#bindEmitter
 class MockedEventEmitter {
   on () { }
   addListener () { }
