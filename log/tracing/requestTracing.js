@@ -1,6 +1,8 @@
-const uuid = require('uuid')
-const { createNamespace } = require('continuation-local-storage')
+'use strict'
 
+const uuid = require('uuid')
+
+const LocalStorage = require('./localStorage')
 const { REQUEST_ID_HEADER, ROOT_REQUEST_ID_HEADER, ORIGIN_REQUEST_ID_HEADER } = require('./headers')
 
 function setInitialRequestTracingHeaders (req) {
@@ -21,30 +23,16 @@ function notUUID (uuidString) {
   return !UUID_REGEX.test(uuidString)
 }
 
-const CLS_NAMESPACE = 'uk.gov.hmcts.cmc.citizenFrontend'
-const INITIAL_REQUEST = 'initialRequest'
-
-const clsNamespace = createNamespace(CLS_NAMESPACE)
-
-function proceedWithinCLSContext (req, res, next) {
-  clsNamespace.run(() => {
-    clsNamespace.bindEmitter(req)
-    clsNamespace.bindEmitter(res)
-    clsNamespace.set(INITIAL_REQUEST, req)
-    next()
-  })
-}
-
 class RequestTracing {
   static middleware (req, res, next) {
     if (tracingHeadersNotPresentOrInvalid(req)) {
       setInitialRequestTracingHeaders(req)
     }
-    proceedWithinCLSContext(req, res, next)
+    LocalStorage.proceedWithinLocalStorageContext(req, res, next)
   }
 
   static getInitialRequest () {
-    return clsNamespace.get(INITIAL_REQUEST)
+    return LocalStorage.retrieveInitialRequest()
   }
 
   static getRootRequestId () {
