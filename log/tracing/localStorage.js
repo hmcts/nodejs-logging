@@ -4,7 +4,7 @@ const { createNamespace } = require('continuation-local-storage')
 
 const INITIAL_REQUEST = 'initialRequest'
 
-const clsNamespace = createNamespace('uk.gov.hmcts.tracing.localStorage')
+const clsNamespace = createNamespace('uk.gov.hmcts.reform.tracing.localStorage')
 
 class LocalStorage {
   static proceedWithinLocalStorageContext (req, res, next) {
