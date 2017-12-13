@@ -6,9 +6,9 @@ A logging component used by Reform's Node.js applications. Some background info:
 * there are 8 log levels: `ALL`, `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL` and `OFF`.
 * a level can be set via an environment variable `LOG_LEVEL`, the default is `INFO`.
 * there are 3 types of logging output which is set via an environment variable `LOG_OUTPUT`, the default is `human`:
- - `human` - single line of a human readable output
- - `single` - a single line of JSON output
- - `multi` - a multiline formatted JSON output
+  - `human` - single line of a human readable output
+  - `single` - a single line of JSON output
+  - `multi` - a multiline formatted JSON output
 * by default logging is turned off when running the unit tests.
 
 ## Usage
