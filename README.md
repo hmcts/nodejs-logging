@@ -75,6 +75,32 @@ It will log all requests made against your application. For example, a typical H
 }
 ```
 
+### Request tracing for Express applications
+
+An Express middleware is provided which automatically populates request headers with request tracing IDs. Sample usage:
+
+```javascript
+const { RequestTracing } = require('@hmcts/nodejs-logging')
+
+app.use(RequestTracing.middleware)
+```
+
+Assuming your Express application servers as the system's entry point which serves user UI, this middleware will intercept user requests and set `Root-Request-Id` and `Request-Id` headers on it. If the incoming request comes from a different service which already populated those values, they will be forwarded.
+
+Apart from populating the headers, access to request tracing information is available at any point during request processing, e.g.:
+
+```javascript
+const id = RequestTracing.getCurrentRequestId()
+```
+
+We can also access the original request:
+
+```javascript
+const request = RequestTracing.retrieveInitialRequest()
+```
+
+This features are enabled by [continuation-local-storage module](https://github.com/othiym23/node-continuation-local-storage).
+
 ## Units Tests
 
 Just do
