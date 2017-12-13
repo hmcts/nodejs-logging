@@ -99,7 +99,7 @@ We can also access the original request:
 const request = RequestTracing.retrieveInitialRequest()
 ```
 
-This features are enabled by [continuation-local-storage module](https://github.com/othiym23/node-continuation-local-storage).
+These features are enabled by [continuation-local-storage module](https://github.com/othiym23/node-continuation-local-storage).
 
 ## Units Tests
 
