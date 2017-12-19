@@ -3,7 +3,7 @@ const moment = require('moment');
 const { logging, outputTypes } = require('./config');
 const levels = logging.log4js.levels;
 
-const RequestTracing = require('./tracing/requestTracing')
+const RequestTracing = require('./tracing/requestTracing');
 
 let userConfig = {};
 
@@ -98,13 +98,13 @@ class Logger {
 
   _addTracingInformation (logEntry) {
     if (isBlank(logEntry.requestId)) {
-      logEntry.requestId = RequestTracing.getCurrentRequestId() || logging.defaultLogEntry.requestId
+      logEntry.requestId = RequestTracing.getCurrentRequestId() || logging.defaultLogEntry.requestId;
     }
     if (isBlank(logEntry.originRequestId)) {
-      logEntry.originRequestId = RequestTracing.getOriginRequestId() || logging.defaultLogEntry.originRequestId
+      logEntry.originRequestId = RequestTracing.getOriginRequestId() || logging.defaultLogEntry.originRequestId;
     }
     if (isBlank(logEntry.rootRequestId)) {
-      logEntry.rootRequestId = RequestTracing.getRootRequestId() || logging.defaultLogEntry.rootRequestId
+      logEntry.rootRequestId = RequestTracing.getRootRequestId() || logging.defaultLogEntry.rootRequestId;
     }
   }
 
