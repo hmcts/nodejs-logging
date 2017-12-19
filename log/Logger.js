@@ -8,7 +8,7 @@ const RequestTracing = require('./tracing/requestTracing');
 let userConfig = {};
 
 function isBlank (str) {
-  return !str || str.trim().length === 0
+  return !str || str.trim().length === 0;
 }
 
 class Logger {
