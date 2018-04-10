@@ -9,15 +9,8 @@ const request = require('supertest');
 describe('Express.js application logging', () => {
   let myLogger, logger;
 
-  const CONFIG = {
-    microservice: 'track-your-appeal',
-    team: 'SSCS',
-    environment: 'production'
-  };
-
   beforeEach(() => {
     myLogger = require('../../log/Logger');
-    myLogger.config(CONFIG);
   });
 
   describe('unit', () => {
