@@ -119,6 +119,77 @@ describe('Logging within the Node.js application', () => {
       assert(spy.calledOnce)
       assert(spy.calledWith('silly', testMessage, testMeta))
     })
+  })
+
+  describe('Adding user defined fields to a log entry object', () => {
+
+    let logged
+    const logger = myLogger.getLogger('test')
+    logger.remove(winston.transports.Console)
+    const spy = sinon.spy()
+    logger.add(spyLogger, { level: 'info', spy: spy })
+
+    const logEntry = {
+      message: 'this is some information',
+      responseCode: 404,
+      rootRequestId: 'ac-23-4a-b8-4f',
+      requestId: 'bc-63-4a-b8-4g',
+      originRequestId: 'cc-93-4a-b8-4i',
+      environment: 'production',
+      hostname: 'myhostname',
+      fields: [
+        { key: 'a', value: 1 },
+        { key: 'b', value: 'foo' },
+        { key: 'c', value: [1, 2, 3] }
+      ]
+    }
+
+    beforeEach(() => {
+      logger.info(logEntry) // Any log level will do.
+    })
+
+    it('should set the level field', () => {
+      expect(spy.withArgs()).to.eql('info')
+    })
+
+    it('should set the message field', () => {
+      expect(logged.message).to.eql('this is some information')
+    })
+
+    it('should set the response code', () => {
+      expect(logged.responseCode).to.eql(404)
+    })
+
+    it('should set the rootRequestId', () => {
+      expect(logged.rootRequestId).to.eql('ac-23-4a-b8-4f')
+    })
+
+    it('should set the requestId', () => {
+      expect(logged.requestId).to.eql('bc-63-4a-b8-4g')
+    })
+
+    it('should set the originRequestId', () => {
+      expect(logged.originRequestId).to.eql('cc-93-4a-b8-4i')
+    })
+
+    it('should set the environment', () => {
+      expect(logged.environment).to.eql('production')
+    })
+
+    it('should set the hostname', () => {
+      expect(logged.hostname).to.be.a('string')
+      expect(logged.hostname.length > 0).to.eql(true)
+    })
+
+    it('should set the fields', () => {
+      expect(logged.fields.length).to.eql(3)
+      expect(logged.fields[0].key).to.eql('a')
+      expect(logged.fields[1].key).to.eql('b')
+      expect(logged.fields[2].key).to.eql('c')
+      expect(logged.fields[0].value).to.eql(1)
+      expect(logged.fields[1].value).to.eql('foo')
+      expect(logged.fields[2].value).to.eql([1, 2, 3])
+    })
 
   })
 
