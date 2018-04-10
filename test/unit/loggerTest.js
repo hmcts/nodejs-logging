@@ -14,9 +14,9 @@ describe('Logging within the Node.js application', () => {
 
     const testMessage = 'Hello World'
     const testMeta = { hello: 'world' }
-    var logger
-    var i = 0
-    var spy
+    let logger
+    let i = 0
+    let spy
 
     beforeEach(() => {
       logger = myLogger.getLogger('test' + i++)
@@ -34,6 +34,45 @@ describe('Logging within the Node.js application', () => {
       logger.debug(testMessage, testMeta)
       assert(spy.calledOnce)
       assert(spy.calledWith('debug', testMessage, testMeta))
+    })
+
+    it('should log a message for INFO when logger default level is DEBUG', () => {
+      logger.add(spyLogger, { level: 'debug', spy: spy })
+
+      logger.info(testMessage, testMeta)
+      assert(spy.calledOnce)
+      assert(spy.calledWith('info', testMessage, testMeta))
+    })
+
+    it('should log a message for WARN when logger default level is DEBUG', () => {
+      logger.add(spyLogger, { level: 'debug', spy: spy })
+
+      logger.warn(testMessage, testMeta)
+      assert(spy.calledOnce)
+      assert(spy.calledWith('warn', testMessage, testMeta))
+    })
+
+    it('should log a message for ERROR when logger default level is DEBUG', () => {
+      logger.add(spyLogger, { level: 'debug', spy: spy })
+
+      logger.error(testMessage, testMeta)
+      assert(spy.calledOnce)
+      assert(spy.calledWith('error', testMessage, testMeta))
+    })
+
+    it('should log a message for VERBOSE when logger default level is DEBUG', () => {
+      logger.add(spyLogger, { level: 'debug', spy: spy })
+
+      logger.verbose(testMessage, testMeta)
+      assert(spy.calledOnce)
+      assert(spy.calledWith('verbose', testMessage, testMeta))
+    })
+
+    it('should not log a message for SILLY when logger default level is DEBUG', () => {
+      logger.add(spyLogger, { level: 'debug', spy: spy })
+
+      logger.silly(testMessage, testMeta)
+      assert(spy.notCalled)
     })
 
     it('should log a message at level INFO', () => {
