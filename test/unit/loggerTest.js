@@ -28,96 +28,100 @@ describe('Logging within the Node.js application', () => {
       logger.remove(spyLogger)
     })
 
-    it('should log a message at level DEBUG', () => {
-      logger.add(spyLogger, { level: 'debug', spy: spy })
+    context('when logger default level is DEBUG', () => {
+      beforeEach(() => {
+        logger.add(spyLogger, { level: 'debug', spy: spy })
+      })
 
-      logger.debug(testMessage, testMeta)
-      assert(spy.calledOnce)
-      assert(spy.calledWith('debug', testMessage, testMeta))
+      it('should not log a message for SILLY', () => {
+        logger.silly(testMessage, testMeta)
+
+        assert(spy.notCalled)
+      })
+
+      it('should log a message for VERBOSE', () => {
+        logger.verbose(testMessage, testMeta)
+
+        assert(spy.calledOnce)
+        assert(spy.calledWith('verbose', testMessage, testMeta))
+      })
+
+      it('should log a message for INFO', () => {
+        logger.info(testMessage, testMeta)
+
+        assert(spy.calledOnce)
+        assert(spy.calledWith('info', testMessage, testMeta))
+      })
+
+      it('should log a message for WARN', () => {
+        logger.warn(testMessage, testMeta)
+
+        assert(spy.calledOnce)
+        assert(spy.calledWith('warn', testMessage, testMeta))
+      })
+
+      it('should log a message for ERROR', () => {
+        logger.error(testMessage, testMeta)
+
+        assert(spy.calledOnce)
+        assert(spy.calledWith('error', testMessage, testMeta))
+      })
     })
 
-    it('should log a message for INFO when logger default level is DEBUG', () => {
-      logger.add(spyLogger, { level: 'debug', spy: spy })
+    context('when logger default level matches level used to log the message', () => {
+      it('should log a message at level SILLY', () => {
+        logger.add(spyLogger, { level: 'silly', spy: spy })
 
-      logger.info(testMessage, testMeta)
-      assert(spy.calledOnce)
-      assert(spy.calledWith('info', testMessage, testMeta))
-    })
+        logger.silly(testMessage, testMeta)
 
-    it('should log a message for WARN when logger default level is DEBUG', () => {
-      logger.add(spyLogger, { level: 'debug', spy: spy })
+        assert(spy.calledOnce)
+        assert(spy.calledWith('silly', testMessage, testMeta))
+      })
 
-      logger.warn(testMessage, testMeta)
-      assert(spy.calledOnce)
-      assert(spy.calledWith('warn', testMessage, testMeta))
-    })
+      it('should log a message at level DEBUG', () => {
+        logger.add(spyLogger, { level: 'debug', spy: spy })
 
-    it('should log a message for ERROR when logger default level is DEBUG', () => {
-      logger.add(spyLogger, { level: 'debug', spy: spy })
+        logger.debug(testMessage, testMeta)
 
-      logger.error(testMessage, testMeta)
-      assert(spy.calledOnce)
-      assert(spy.calledWith('error', testMessage, testMeta))
-    })
+        assert(spy.calledOnce)
+        assert(spy.calledWith('debug', testMessage, testMeta))
+      })
 
-    it('should log a message for VERBOSE when logger default level is DEBUG', () => {
-      logger.add(spyLogger, { level: 'debug', spy: spy })
+      it('should log a message at level VERBOSE', () => {
+        logger.add(spyLogger, { level: 'verbose', spy: spy })
 
-      logger.verbose(testMessage, testMeta)
-      assert(spy.calledOnce)
-      assert(spy.calledWith('verbose', testMessage, testMeta))
-    })
+        logger.verbose(testMessage, testMeta)
 
-    it('should not log a message for SILLY when logger default level is DEBUG', () => {
-      logger.add(spyLogger, { level: 'debug', spy: spy })
+        assert(spy.calledOnce)
+        assert(spy.calledWith('verbose', testMessage, testMeta))
+      })
 
-      logger.silly(testMessage, testMeta)
-      assert(spy.notCalled)
-    })
+      it('should log a message at level INFO', () => {
+        logger.add(spyLogger, { level: 'info', spy: spy })
 
-    it('should log a message at level INFO', () => {
-      logger.add(spyLogger, { level: 'info', spy: spy })
+        logger.info(testMessage, testMeta)
 
-      logger.info(testMessage, testMeta)
+        assert(spy.calledOnce)
+        assert(spy.calledWith('info', testMessage, testMeta))
+      })
 
-      assert(spy.calledOnce)
-      assert(spy.calledWith('info', testMessage, testMeta))
-    })
+      it('should log a message at level WARN', () => {
+        logger.add(spyLogger, { level: 'warn', spy: spy })
 
-    it('should log a message at level WARN', () => {
-      logger.add(spyLogger, { level: 'warn', spy: spy })
+        logger.warn(testMessage, testMeta)
 
-      logger.warn(testMessage, testMeta)
+        assert(spy.calledOnce)
+        assert(spy.calledWith('warn', testMessage, testMeta))
+      })
 
-      assert(spy.calledOnce)
-      assert(spy.calledWith('warn', testMessage, testMeta))
-    })
+      it('should log a message at level ERROR', () => {
+        logger.add(spyLogger, { level: 'error', spy: spy })
 
-    it('should log a message at level ERROR', () => {
-      logger.add(spyLogger, { level: 'error', spy: spy })
+        logger.error(testMessage, testMeta)
 
-      logger.error(testMessage, testMeta)
-
-      assert(spy.calledOnce)
-      assert(spy.calledWith('error', testMessage, testMeta))
-    })
-
-    it('should log a message at level VERBOSE', () => {
-      logger.add(spyLogger, { level: 'verbose', spy: spy })
-
-      logger.verbose(testMessage, testMeta)
-
-      assert(spy.calledOnce)
-      assert(spy.calledWith('verbose', testMessage, testMeta))
-    })
-
-    it('should log a message at level SILLY', () => {
-      logger.add(spyLogger, { level: 'silly', spy: spy })
-
-      logger.silly(testMessage, testMeta)
-
-      assert(spy.calledOnce)
-      assert(spy.calledWith('silly', testMessage, testMeta))
+        assert(spy.calledOnce)
+        assert(spy.calledWith('error', testMessage, testMeta))
+      })
     })
   })
 
@@ -137,7 +141,5 @@ describe('Logging within the Node.js application', () => {
       expect(loggerInstance2).to.not.equal(loggerInstance3)
       expect(loggerInstance3).to.not.equal(loggerInstance1)
     })
-
   })
-
 })
