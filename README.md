@@ -2,7 +2,10 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/hmcts/nodejs-logging.svg)](https://greenkeeper.io/)
 
-A logging component used by Reform's Node.js applications. Some background info:
+A logging component used by Reform's Node.js applications. 
+Some background info:
+
+<b>This is not compatible with reform tactical logging spec and that for tactical applications logger 2.x should be used</b>.
 * there are 6 log levels: 
 ```{ 
      error: 0, 
@@ -51,7 +54,7 @@ logger.log({
  Outputs:
 { level: 'info',
   message: 'What time is the testing at?',
-  label: 'right meow!',
+  label: 'app.js',
   timestamp: '2017-09-30T03:57:26.875Z' }
 ```
 
