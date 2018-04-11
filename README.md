@@ -4,7 +4,7 @@
 
 A logging component used by Reform's Node.js applications.
 
-<b>This is not compatible with Reform tactical logging spec and that for tactical applications logger 2.x should be used</b>.
+**This is not compatible with Reform tactical logging spec. Logger 2.x should be used for tactical applications.**
 
 Some background info:
 * there are 6 log levels: `silly` (5), `debug` (4), `verbose` (3), `info` (2), `warn` (1) and `error` (0).
