@@ -2,21 +2,15 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/hmcts/nodejs-logging.svg)](https://greenkeeper.io/)
 
-A logging component used by Reform's Node.js applications. 
-Some background info:
+A logging component used by Reform's Node.js applications.
 
-<b>This is not compatible with reform tactical logging spec and that for tactical applications logger 2.x should be used</b>.
-* there are 6 log levels: 
-```{ 
-     error: 0, 
-     warn: 1, 
-     info: 2, 
-     verbose: 3, 
-     debug: 4, 
-     silly: 5 
-   }
-```
-* the default is `info`.
+<b>This is not compatible with Reform tactical logging spec and that for tactical applications logger 2.x should be used</b>.
+
+Some background info:
+* there are 6 log levels: `silly` (5), `debug` (4), `verbose` (3), `info` (2), `warn` (1) and `error` (0).
+* log level can be set via an environment variable `LOG_LEVEL`, the default is `info`.
+* logging output in JSON format can be enabled by setting environment variable `JSON_PRINT` to `true`, the default is `false`:
+* by default logging is turned off when running the unit tests.
 
 ## Usage
 
@@ -37,21 +31,27 @@ Then you can create a logger instance and use it to log information:
 ```javascript
 const logger = Logger.getLogger('app.js') // app.js is just an example, can be anything that's meaningful to you
 ```
-usage are:
+
+Usage are:
 
 ```
 logger.info({
   message: 'Yay, logging!'
 })
 ```
+
 or
+
 ```
 logger.log({
   level: 'info',
   message: 'What time is the testing at?'
 });
+```
 
- Outputs:
+Above will result in the following log printed (if JSON format is enabled).
+
+```
 { level: 'info',
   message: 'What time is the testing at?',
   label: 'app.js',

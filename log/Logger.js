@@ -7,7 +7,6 @@ const tsFormat = () => (moment().format('YYYY-MM-DDTHH:mm:ssZ'))
 function transports (label) {
   return [new winston.transports.Console({
     level: (process.env.LOG_LEVEL || 'INFO').toLowerCase(),
-    prettyPrint: process.env.PRETTY_PRINT || false,
     json: process.env.JSON_PRINT || false,
     timestamp: tsFormat,
     label: label
