@@ -24,7 +24,7 @@
     "mocha": "^4.0.1",
     "sinon": "^4.0.2",
     "sinon-chai": "^2.8.0",
-    "supertest": "3.0.0",
+    "supertest": "3.4.2",
     "winston-spy": "^0.2.0"
   }
 }
