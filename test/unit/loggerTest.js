@@ -8,14 +8,26 @@ describe('Logging within the Node.js application', () => {
 
   describe('Creating a logger', () => {
     const Logger = require('../../log/Logger')
-    const instance = Logger.getLogger('test')
+    let i = 0
 
     it('should set the transport to console', () => {
+      const instance = Logger.getLogger('test' + i++)
+
       expect(instance.transports[0]).to.be.instanceOf(winston.transports.Console)
     })
 
-    it('should set default the level to INFO', () => {
+    it('should default the level to INFO', () => {
+      delete process.env.LOG_LEVEL;
+      const instance = Logger.getLogger('test' + i++)
+
       expect(instance.transports[0].level).to.eq('info')
+    })
+
+    it('should set the level to process.env.LOG_LEVEL', () => {
+      process.env.LOG_LEVEL = 'ERROR';
+      const instance = Logger.getLogger('test' + i++)
+
+      expect(instance.transports[0].level).to.eq('error')
     })
 
   })
