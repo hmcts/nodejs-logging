@@ -10,9 +10,8 @@ function timestamp() {
 function transport(label) {
   return new winston.transports.Console({
     level: (process.env.LOG_LEVEL || 'INFO').toLowerCase(),
-    json: process.env.JSON_PRINT || false,
-    timestamp: timestamp,
-    label: label
+    formatter: process.env.JSON_PRINT ? format.json() : format.label({ label }),
+    timestamp
   })
 }
 
