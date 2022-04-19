@@ -2,6 +2,7 @@
   "name": "@hmcts/nodejs-logging",
   "version": "3.0.4",
   "description": "",
+  "main": "Logger.js",
   "scripts": {
     "test": "LOG_LEVEL=OFF mocha test/unit/* --reporter spec"
   },
