@@ -13,7 +13,6 @@
   "author": "HMCTS",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.19.3",
     "on-finished": "^2.3.0",
     "winston": "^3.7.2"
   },
