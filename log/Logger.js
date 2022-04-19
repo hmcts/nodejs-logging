@@ -1,17 +1,16 @@
 const moment = require('moment')
 const winston = require('winston')
+const {combine, timestamp, label, json} = require('logform').format
 
 const container = new winston.Container()
 
-function timestamp() {
-  return moment().format('YYYY-MM-DDTHH:mm:ssZ')
-}
+function transport(loggerName) {
+  const format = process.env.JSON_PRINT ? json() : label({ label: loggerName })
+  const timeStamper = timestamp({ format: moment().format('YYYY-MM-DDTHH:mm:ssZ') });
 
-function transport(label) {
   return new winston.transports.Console({
     level: (process.env.LOG_LEVEL || 'INFO').toLowerCase(),
-    formatter: process.env.JSON_PRINT ? format.json() : format.label({ label }),
-    timestamp
+    format: combine(format, timeStamper)
   })
 }
 
