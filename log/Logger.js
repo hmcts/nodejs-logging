@@ -1,19 +1,25 @@
+const moment = require('moment')
 const winston = require('winston')
-const {combine, timestamp, label, json, printf, colorize} = require('logform').format
 
 const container = new winston.Container()
+
+function timestamp() {
+  return moment().format('YYYY-MM-DDTHH:mm:ssZ')
+}
+
+function transport(label) {
+  return new winston.transports.Console({
+    level: (process.env.LOG_LEVEL || 'INFO').toLowerCase(),
+    json: process.env.JSON_PRINT || false,
+    timestamp: timestamp,
+    label: label
+  })
+}
 
 class Logger {
 
   static getLogger(name) {
-    const print = printf(({ level, message, label, timestamp }) => `${timestamp} [${label}] ${level}: ${message}`)
-    const format = process.env.JSON_PRINT ? json() : print
-    const level = (process.env.LOG_LEVEL || 'INFO').toLowerCase()
-
-    return container.add(name, {
-      format: combine(colorize(), label({ label: name }), timestamp(), format),
-      transports: [new winston.transports.Console({ level })]
-    })
+    return container.add(name, {transports: [transport(name)]})
   }
 }
 
