@@ -8,6 +8,7 @@ class AccessLogger {
     this.logger = config.logger || Logger.getLogger('express.access');
     this.formatter = config.formatter || AccessLogger.defaultFormatter;
     this.userLevel = config.level || AccessLogger.defaultLevel;
+    this.ignoreRequests = config.ignoreRequests || [];
   }
 
   static middleware(config = { }) {
@@ -15,7 +16,9 @@ class AccessLogger {
 
     return (req, res, next) => {
       onFinished(res, () => {
-        accessLogger.log(req, res);
+        if (!accessLogger.ignoreRequests.includes(req.path)) {
+          accessLogger.log(req, res);
+        }
       });
 
       next();
