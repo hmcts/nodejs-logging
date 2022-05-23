@@ -4,18 +4,21 @@ const onFinished = require('on-finished');
 const Logger = require('./Logger')
 
 class AccessLogger {
-  constructor(config = { }) {
+  constructor(config = {}) {
     this.logger = config.logger || Logger.getLogger('express.access');
     this.formatter = config.formatter || AccessLogger.defaultFormatter;
     this.userLevel = config.level || AccessLogger.defaultLevel;
+    this.ignoreRequests = config.ignoreRequests || [];
   }
 
-  static middleware(config = { }) {
+  static middleware(config = {}) {
     const accessLogger = new AccessLogger(config);
 
     return (req, res, next) => {
       onFinished(res, () => {
-        accessLogger.log(req, res);
+        if (!accessLogger.ignoreRequests.some(ignoreRequest => req.path.match(ignoreRequest))) {
+          accessLogger.log(req, res);
+        }
       });
 
       next();
