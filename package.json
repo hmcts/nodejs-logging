@@ -11,6 +11,7 @@
   },
   "author": "HMCTS",
   "license": "MIT",
+  "main": "index.js",
   "dependencies": {
     "moment": "^2.29.4",
     "on-finished": "^2.3.0",
